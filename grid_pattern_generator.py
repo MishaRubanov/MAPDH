@@ -7,7 +7,7 @@ Created on Tue Aug  9 12:50:39 2022
 
 import numpy as np
 from scipy.special import comb
-
+import matplotlib.pyplot as plt
 def bernstein_poly(i, n, t):
     """
      The Bernstein polynomial of n, i as a function of t
@@ -44,29 +44,58 @@ def bezier_curve(points, nTimes=1000):
     return xvals, yvals
 
 
-if __name__ == "__main__":
-    from matplotlib import pyplot as plt
-
-    nPoints = 8
-    # points = np.random.rand(nPoints,2)*15
-    points = np.array([[0,7],[4,13],[7,7],[12,2],[15,7]])
-    xpoints = [p[0] for p in points]
-    ypoints = [p[1] for p in points]
-
-    xvals, yvals = bezier_curve(points, nTimes=15)
-    plt.plot(np.round(xvals), yvals)
-    plt.plot(xpoints, ypoints, "ro")
-    for nr in range(len(points)):
-        plt.text(points[nr][0], points[nr][1], nr)
-
-    plt.show()
-    
-    z1,z2 = np.rint(xvals),np.rint(yvals)#,dtype=int)
-
+#%%xmat and bezmat
 bezmat = np.zeros([15,15])
 
+points = np.array([[0,7],[4,13],[7,7],[12,2],[15,7]])
+xpoints = [p[0] for p in points]
+ypoints = [p[1] for p in points]
+
+xvals, yvals = bezier_curve(points, nTimes=15)
+plt.plot(np.round(xvals), yvals)
+plt.plot(xpoints, ypoints, "ro")
+for nr in range(len(points)):
+    plt.text(points[nr][0], points[nr][1], nr)
+bz1,bz2 = np.rint(xvals),np.rint(yvals)#,dtype=int)
 for i in range(15):
-    bezmat[int(z2[i]),i] = 1
+    bezmat[int(bz2[i]),i] = 1
+plt.show()
+
+xmat = np.zeros([15,15])
+
+points = np.array([[0,0],[14,14]])
+xpoints = [p[0] for p in points]
+ypoints = [p[1] for p in points]
+
+xvals, yvals = bezier_curve(points, nTimes=15)
+plt.plot(np.round(xvals), yvals)
+plt.plot(xpoints, ypoints, "ro")
+for nr in range(len(points)):
+    plt.text(points[nr][0], points[nr][1], nr)
+xz1,xz2 = np.rint(xvals),np.rint(yvals)#,dtype=int)
+for i in range(15):
+    xmat[int(xz2[i]),i] = 1
+
+points = np.array([[14,0],[0,14]])
+xpoints = [p[0] for p in points]
+ypoints = [p[1] for p in points]
+
+xvals, yvals = bezier_curve(points, nTimes=15)
+plt.plot(np.round(xvals), yvals)
+plt.plot(xpoints, ypoints, "ro")
+for nr in range(len(points)):
+    plt.text(points[nr][0], points[nr][1], nr)
+xz1b,xz2b = np.rint(xvals),np.rint(yvals)#,dtype=int)
+
+for i in range(15):
+    xmat[int(xz2b[i]),i] = 1
+plt.show()
+
+
+    
+    
+    
+    
 plt.figure()
 plt.imshow(bezmat)
 from scipy import ndimage
@@ -127,22 +156,13 @@ dil_clover = ndimage.binary_dilation(aclover_mat)
 
 
 rand_mat = np.random.choice([0, 1], size=(15,15), p=[0.9,0.1])
-nPoints = 8
-# points = np.random.rand(nPoints,2)*15
-points = np.array([[0,7],[4,13],[7,7],[12,2],[14,7]])
-xpoints = [p[0] for p in points]
-ypoints = [p[1] for p in points]
-bez_mat = np.zeros([15,15])
-
-for i in range(15):
-    bez_mat[int(z2[i]),i] = 1
 
 f, axarr = plt.subplots(2,2)
 
-axarr[0,0].imshow(dil_clover,cmap = 'Greys_r')
+axarr[0,0].imshow(xmat,cmap = 'Greys_r')
 axarr[0,1].imshow(clover_mat,cmap = 'Greys_r')
 axarr[1,0].imshow(rand_mat,cmap = 'Greys_r')
-axarr[1,1].imshow(bez_mat,cmap = 'Greys_r')
+axarr[1,1].imshow(bezmat,cmap = 'Greys_r')
 
 
 
