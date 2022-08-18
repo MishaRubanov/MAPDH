@@ -8,6 +8,8 @@ Created on Tue Aug  9 12:50:39 2022
 import numpy as np
 from scipy.special import comb
 import matplotlib.pyplot as plt
+import skimage
+
 def bernstein_poly(i, n, t):
     """
      The Bernstein polynomial of n, i as a function of t
@@ -159,19 +161,19 @@ rand_mat = np.random.choice([0, 1], size=(15,15), p=[0.9,0.1])
 
 f, axarr = plt.subplots(2,2)
 
+
+rr,cc = skimage.draw.circle_perimeter(5,5,3,shape=[11,11])
+c_mat = np.zeros((11, 11), dtype=np.uint8)
+
+c_mat[rr,cc] = 1
+plt.imshow(c_mat)
+
+
 axarr[0,0].imshow(xmat,cmap = 'Greys_r')
 axarr[0,1].imshow(clover_mat,cmap = 'Greys_r')
 axarr[1,0].imshow(rand_mat,cmap = 'Greys_r')
-axarr[1,1].imshow(bezmat,cmap = 'Greys_r')
+axarr[1,1].imshow(c_mat,cmap = 'Greys_r')
 
-
-
-import skimage
-rr,cc = skimage.draw.circle_perimeter(5,5,3,shape=[11,11])
-img = np.zeros((11, 11), dtype=np.uint8)
-
-img[rr,cc] = 1
-plt.imshow(img)
 
 
 
