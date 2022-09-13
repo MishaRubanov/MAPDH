@@ -86,15 +86,15 @@ xpoints = [p[0] for p in points]
 ypoints = [p[1] for p in points]
 
 xvals, yvals = bezier_curve(points, nTimes=11)
-plt.plot(np.round(xvals), yvals)
-plt.plot(xpoints, ypoints, "ro")
+# plt.plot(np.round(xvals), yvals)
+# plt.plot(xpoints, ypoints, "ro")
 for nr in range(len(points)):
     plt.text(points[nr][0], points[nr][1], nr)
 xz1b,xz2b = np.rint(xvals),np.rint(yvals)#,dtype=int)
 
 for i in range(11):
     xmat[i,int(xz1b[i])] = 1
-plt.show()
+# plt.show()
 
 
     
@@ -136,16 +136,77 @@ c_mat[rr,cc] = 1
 plt.figure()
 plt.imshow(c_mat)
 f, axarr = plt.subplots(2,2)
-
+# axarr.axis('off')
 axarr[0,0].imshow(xmat,cmap = 'Greys_r')
+axarr[0, 0].set_axis_off()
+
 axarr[0,1].imshow(clover_mat,cmap = 'Greys_r')
+axarr[0, 1].set_axis_off()
+
 axarr[1,0].imshow(rand_mat,cmap = 'Greys_r')
+axarr[1, 0].set_axis_off()
+
 axarr[1,1].imshow(c_mat,cmap = 'Greys_r')
+axarr[1, 1].set_axis_off()
 
+f.savefig('binmats.png')
 
+f, axarr = plt.subplots(1,4)
+# axarr.axis('off')
+axarr[0].imshow(xmat,cmap = 'Greys_r')
+axarr[0].set_axis_off()
 
+axarr[1].imshow(clover_mat,cmap = 'Greys_r')
+axarr[1].set_axis_off()
 
+axarr[2].imshow(rand_mat,cmap = 'Greys_r')
+axarr[2].set_axis_off()
 
+axarr[3].imshow(c_mat,cmap = 'Greys_r')
+axarr[3].set_axis_off()
+
+f.savefig('binmats2.png')
+plt.scatter
+
+[x_xmat,y_xmat] = np.where(xmat)
+[x_xmatp,y_xmatp] = np.where(1-xmat)
+
+[x_clover_mat,y_clover_mat] = np.where(clover_mat)
+[x_clover_matp,y_clover_matp] = np.where(1-clover_mat)
+
+[x_rand_mat,y_rand_mat] = np.where(rand_mat)
+[x_rand_matp,y_rand_matp] = np.where(1-rand_mat)
+
+[x_c_mat,y_c_mat] = np.where(c_mat)
+[x_c_matp,y_c_matp] = np.where(1-c_mat)
+
+plt.ion()
+f, axarr = plt.subplots(2,2)
+# axarr.set_axis('equal')
+ssize = 75
+axarr[0,0].scatter(x_xmat,y_xmat,c='#6d77a2',s=ssize)
+axarr[0,0].scatter(x_xmatp,y_xmatp,c='#b28280',s=ssize)
+axarr[0,0].set_axis_off()
+axarr[0, 0].set_aspect('equal', 'box')
+
+axarr[1,0].scatter(x_clover_mat,y_clover_mat,c='#6d77a2',s=ssize)
+axarr[1,0].scatter(x_clover_matp,y_clover_matp,c='#b28280',s=ssize)
+axarr[1,0].set_axis_off()
+axarr[1, 0].set_aspect('equal', 'box')
+
+axarr[0,1].scatter(x_rand_mat,y_rand_mat,c='#6d77a2',s=ssize)
+axarr[0,1].scatter(x_rand_matp,y_rand_matp,c='#b28280',s=ssize)
+axarr[0,1].set_axis_off()
+axarr[0, 1].set_aspect('equal', 'box')
+
+axarr[1,1].scatter(x_c_mat,y_c_mat,c='#6d77a2',s=ssize)
+axarr[1,1].scatter(x_c_matp,y_c_matp,c='#b28280',s=ssize)
+axarr[1,1].set_axis_off()
+axarr[1, 1].set_aspect('equal', 'box')
+
+f.tight_layout()
+
+f.savefig('binmats_scattered.png')
 
 
 
