@@ -266,6 +266,44 @@ def ploc_patterner(arr1,gridlen,exposure,radii=[],valveon = [],dist = 60,ch=4,in
         patterning(exposure,draw_circle,channel=ch,intensity=inte)
         time.sleep(.5)           
 
+def ploc_patternerv2(arr1,gridlen,exposure,radii=[],valveon = [],dist = 60,ch=4,inte=1000):
+    '''Patterns a set of cylindrical hydrogels at fractions (from 0 to 1) specified in 2xn array arr1.
+    if radii = 0, then radii is default 50 um. 
+    the total size of the 
+    arr1: locations of each hydrogel relative to grid size
+    exposure: UV exposure for all hydrogels.
+    slimage: hydrogel shape.
+    valveon: turning a particular valve to pattern.
+    dist: distance between each hydrogel
+    channel: UV/Blue LED
+    intensity: LED intensity
+    the percent location patterner uses the top left corner as reference starting position.'''
+    h = 684
+    w = 608
+    CF = 0.45
+
+    x=core.getXPosition()
+    y=core.getYPosition()
+    arrdist = arr1*gridlen        
+    core.setXYPosition(x,y)
+    time.sleep(3)
+
+    for i in range(np.size(arr1,1)):
+        if radii == []:
+            diam = 100
+            diam_conv = diam / CF
+            draw_circle = circle_mask_generator(h,w,radius=(diam_conv / 2))
+        else:
+            rad = radii[i]
+            rad_conv = rad/CF
+            draw_circle = circle_mask_generator(h,w,radius=(rad_conv))
+        
+        xpos = x+arrdist[0,i]
+        ypos = y+arrdist[1,i]
+        time.sleep(1.5)
+        core.setXYPosition(xpos,ypos)   
+        patterning(exposure,draw_circle,channel=ch,intensity=inte)
+        time.sleep(.5)           
 
 #%%Imaging functions:
     
