@@ -5,7 +5,7 @@ Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH
 
 Patterning examples:
 
-https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
+https://user-images.githubusercontent.com/67386551/219878485-338b717b-f008-45a6-b417-a819aa724788.mp4
 
 https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
 
@@ -35,5 +35,3 @@ Key files in the main folder:
   * PIL: 7.2.0
   * Pycromanager: 0.6.0
 
-T1: 
-https://github.com/MishaRubanov/MAPDH/blob/main/MAPDH_v1.avi
