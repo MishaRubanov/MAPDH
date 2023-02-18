@@ -19,8 +19,8 @@ Key files in the main folder:
 
 ### Prerequisites
 
-* Install lastest copy of [Micromanager](https://micro-manager.org/)
-* Install lastest copy of [Pycromanager](https://github.com/micro-manager/pycro-manager)
+* Install lastest version of [Micromanager](https://micro-manager.org/)
+* Install lastest version of [Pycromanager](https://github.com/micro-manager/pycro-manager)
 
 * Python and other required packages, with version numbers:
   * Python: 3.8
