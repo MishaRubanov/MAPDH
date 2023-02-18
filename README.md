@@ -28,3 +28,6 @@ Key files in the main folder:
   * numpy: 1.18.5
   * PIL: 7.2.0
   * Pycromanager: 0.6.0
+
+T1: 
+https://github.com/MishaRubanov/MAPDH/blob/main/MAPDH_v1.avi
