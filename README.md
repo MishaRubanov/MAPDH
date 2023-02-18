@@ -13,7 +13,7 @@ Key files in the main folder:
 * Patterning_example_script
   * This file is an example that uses a few built-in masks to pattern differently shaped hydrogels
 * MAPDH_example_script
-  * This file is an example for fully automated MADPH - incorporating the flow controller and patterning setup into one script.
+  * This file is an example for fully automated MADPH - incorporating the flow controller and patterning setup into one script for multi-domain patterning.
 
 ### Prerequisites
 
