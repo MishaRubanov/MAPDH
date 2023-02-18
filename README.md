@@ -5,7 +5,9 @@ Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH
 
 Patterning examples:
 https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
+
 https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
+
 ## Getting Started
 
 To streamline MAPDH use, example scripts and functions for convenience are provided.
