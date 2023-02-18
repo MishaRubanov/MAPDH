@@ -5,8 +5,13 @@ Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+There are three key files in the main folder:
+*Patterning_functions
+** This file contains all necessary functions to run all operations in MAPDH.
+*Patterning_example_script
+** This file is an example that uses a few built-in masks to pattern differently shaped hydrogels
+**MAPDH_example_script
+** This file is an example for fully automated MADPH - incorporating the flow controller and patterning setup into one script.
 
 ### Prerequisites
 
