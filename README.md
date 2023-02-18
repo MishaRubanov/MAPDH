@@ -7,7 +7,7 @@ Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH
 
 There are three key files in the main folder:
 * Patterning_functions
-** This file contains all necessary functions to run all operations in MAPDH.
+  * This file contains all necessary functions to run all operations in MAPDH.
 * Patterning_example_script
 ** This file is an example that uses a few built-in masks to pattern differently shaped hydrogels
 * MAPDH_example_script
