@@ -14,6 +14,7 @@ DMD = core.getSLMDevice()
 
 #%% Initialization and Micromanager functions:
 def init():    
+    """Initialization of all hardware."""
     bridge = Bridge(convert_camel_case=False)
     core = bridge.get_core()
     DMD = core.getSLMDevice()
