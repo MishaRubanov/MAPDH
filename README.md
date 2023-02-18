@@ -3,18 +3,9 @@
 
 Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH**) is a platform for the automated fabrication of DNA-functionalized hydrogels using digital, maskless photolithography. The preprint is coming out soon!
 
-Solarized dark             |  Solarized Ocean
-:-------------------------:|:-------------------------:
-![](https://user-images.githubusercontent.com/67386551/219878100-5006ea9a-b2e7-487f-82a5-2ad5d5f173c9.mp4)   |  ![](https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4)
-
-
-<p float="left">
-  <img src="https://user-images.githubusercontent.com/67386551/219878100-5006ea9a-b2e7-487f-82a5-2ad5d5f173c9.mp4" width="500" />
-  <img src="[/img2.png](https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4)" width="500" /> 
-</p>
-
+Patterning examples:
 https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
-
+https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
 ## Getting Started
 
 To streamline MAPDH use, example scripts and functions for convenience are provided.
