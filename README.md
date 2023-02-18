@@ -3,6 +3,8 @@
 
 Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH**) is a platform for the automated fabrication of DNA-functionalized hydrogels using digital, maskless photolithography. The preprint is coming out soon!
 
+
+
 ## Getting Started
 
 To streamline MAPDH use, example scripts and functions for convenience are provided.
@@ -28,3 +30,11 @@ Key files in the main folder:
   * numpy: 1.18.5
   * PIL: 7.2.0
   * Pycromanager: 0.6.0
+
+### Patterning examples
+These are real-time videos of formation of hydrogel letters taken using bright-field microscopy. Each letter is formed using the message_mask_generator package in Python.
+
+https://user-images.githubusercontent.com/67386551/219878485-338b717b-f008-45a6-b417-a819aa724788.mp4
+
+https://user-images.githubusercontent.com/67386551/219878132-83617d94-9442-419f-b393-dbde8f758fe1.mp4
+
