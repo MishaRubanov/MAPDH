@@ -15,5 +15,14 @@ There are three key files in the main folder:
 
 ### Prerequisites
 
-Install [Micromanager](https://micro-manager.org/)
-Install [Pycromanager](https://github.com/micro-manager/pycro-manager)
+* Install lastest copy of [Micromanager](https://micro-manager.org/)
+* Install lastest copy of [Pycromanager](https://github.com/micro-manager/pycro-manager)
+
+* Python and other required packages, with version numbers:
+* Python: 3.8
+* anaconda: 2020.07
+* Scikit-image: 0.19.3
+* Pandas: 1.4.4
+* numpy: 1.18.5
+* PIL: 7.2.0
+* Pycromanager: 0.6.0
