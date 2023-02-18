@@ -3,7 +3,6 @@ from skimage.transform import resize
 import skimage.draw as skdraw
 from pycromanager import Bridge
 import time
-import matplotlib.pyplot as plt
 from skimage.draw import polygon
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
@@ -58,15 +57,15 @@ def valve_on(switch):
     core.setProperty('Arduino-Switch','State',int(df.get(switch)))
 
 def valve_off(switch2='s0'):
-    """Turn Solenoid valve off: No input needed.""" 
+    """Turn Solenoid valve off: Input must be something like 's0', 's1', etc.""" 
     core.setProperty('Arduino-Switch','State',int(df.get(switch2)))
     
 def valve_timer(switch, wait):
-    """Turn Solenoid valve on: Input 1 must be something like 's0', 's1', etc., input 2 must be time in seconds"""
-    # Switch must be something like 's0', 's1', etc.
-    core.setProperty('Arduino-Switch','State',int(df.get(switch)))
-    for m in range(0, wait):
-        time.sleep(1)
+    """Turn Solenoid valve on for a set amount of time.
+    switch: valve to turn on, in the form 's0, s1, etc.
+    wait: time to leave valve on, in seconds. """
+    valve_on(switch)
+    time.sleep(wait)
     valve_off()
 
 #%%Mask Generator Functions:
