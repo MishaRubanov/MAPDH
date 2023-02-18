@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Aug 24 11:45:46 2021
-
-@author: schulmanlab
-"""
 import numpy as np
 from skimage.transform import resize
 import skimage.draw as skdraw
-# from pycromanager import Bridge
+from pycromanager import Bridge
 import time
 import matplotlib.pyplot as plt
 from skimage.draw import polygon
 import pandas as pd
+from PIL import Image, ImageDraw, ImageFont
+
 
 bridge = Bridge(convert_camel_case=False)
 core = bridge.get_core()
@@ -74,11 +70,11 @@ def valve_timer(switch, wait):
     valve_off()
 
 #%%Mask Generator Functions:
-def circle_mask_generator(h,w,radius):  
+def circle_mask_generator(h,w,radius,cx=0,cy=0):  
     """Returns binary mask with a circle in the center for use with a DMD.
     h,w: height, width of mask.
     radius: radius of circle in the center of the mask."""
-    rr,cc = skdraw.disk((h/2,w/2),radius,shape=[h,w])
+    rr,cc = skdraw.disk((h/2+cx,w/2+cy),radius,shape=[h,w])
     mask1 = np.zeros([h,w],dtype='uint8')
     mask1[rr,cc] = 255
     return mask1
@@ -108,10 +104,11 @@ def square_mask_generator(h,w,ex):
     mask2[rr.astype('int'),cc.astype('int')] = 255
     return mask2
     
-def rectangle_mask_generator(h,w,lx,ly):
+def rectangle_mask_generator(h,w,lx,ly,cx=0,cy=0):
     """Returns rectangular mask with a rectangle in the center for use with a DMD.
     h,w: height, width of mask.
-    lx,ly: length,width of rectangle."""
+    lx,ly: length,width of rectangle.
+    cx,cy: x and y offset from center of mask"""
     midx = h/2
     midy = w/2
     lx = lx/2
@@ -120,31 +117,33 @@ def rectangle_mask_generator(h,w,lx,ly):
     starty = midy-ly
     endx = midx + lx
     endy = midy + ly
-    rr,cc = skdraw.rectangle((startx, starty),end=(endx, endy),shape=[h,w])
+    rr,cc = skdraw.rectangle((startx+cx, starty+cy),end=(endx+cx, endy+cy),shape=[h,w])
     mask2 = np.zeros((h,w),dtype='uint8')
     mask2[rr.astype('int'),cc.astype('int')] = 255
     return mask2
 
-def hollow_rr_mask_generator(h,w,lxl,lyl,lxs,lys):
+def hollow_rr_mask_generator(h,w,lxl,lyl,lxs,lys,cxl=0,cyl=0,cxs=0,cys=0):
     """Returns rectangular mask with a rectangular hole in the center for use with a DMD.
     h,w: height, width of mask.
     lxl,lyl: length,width of large rectangle.
-    lxs,lys: length,width of small rectanglar hole"""
-    lrect = rectangle_mask_generator(h, w, lxl, lyl)
-    lsmall = rectangle_mask_generator(h, w, lxs, lys)    
-    lcomb = lrect - lsmall
+    lxs,lys: length,width of small rectanglar hole
+    cxl,cyl: center offset for larger rectangle
+    cxs,cys: center offset for smaller rectangle"""
+    llarge = rectangle_mask_generator(h, w, lxl, lyl,cx=cxl,cy=cyl)
+    lsmall = rectangle_mask_generator(h, w, lxs, lys,cx=cxs,cy=cys)    
+    lcomb = llarge - lsmall
     return lcomb
 
-def hollow_rc_mask_generator(h,w,lxl,lyl,radius):
+def hollow_rc_mask_generator(h,w,lxl,lyl,radius,cx = 0, cy = 0):
     """Returns rectangular mask with a rectangular hole in the center for use with a DMD.
     h,w: height, width of mask.
     lxl,lyl: length,width of large rectangle.
-    radius: radius of small circular hole"""
+    radius: radius of small circular hole
+    cx,cy: circle offset from center"""
     lrect = rectangle_mask_generator(h, w, lxl, lyl)
-    lsmall = circle_mask_generator(h, w, radius)    
+    lsmall = circle_mask_generator(h, w, radius,cx=cx,cy=cx)    
     lcomb = lrect - lsmall
     return lcomb
-
 
 def plus_mask_generator(h,w,wdist = 90, wthick = 30):
     """Returns a plus-shaped mask with a plus in the center for use with a DMD.
@@ -154,6 +153,26 @@ def plus_mask_generator(h,w,wdist = 90, wthick = 30):
     m1 = rectangle_mask_generator(h,w,wthick,wdist)
     m2 = rectangle_mask_generator(h,w,wdist,wthick)
     return m1 + m2
+
+def message_mask_generator(h,w,message="ABC",fontsize = 100,fonttype = "ariblk.ttf"):
+    """Returns a mask with a message within it for use with a DMD.
+    h,w  height, width of mask.
+    character: any standard character [A-Z, 0-9]
+    fontsize: size of the font, in pixels
+    fonttype: any font located within the font directory on the OS."""
+    img = Image.new('1', (h,w), color = 'black')
+    font = ImageFont.truetype(fonttype, fontsize)
+    # font = ImageFont.truetype("arial.ttf", fontsize)
+
+    d = ImageDraw.Draw(img)
+    dx,dy = d.textsize(message,font=font)
+    d.text(((h-dx)/2,(w-dy)/2), message,font=font,stroke_fill = 50 , fill=(255),align="left") #TO ALIGN CHARACTER IN CENTER
+    img=np.pad(img,pad_width=0, mode='constant', constant_values=0) #Manually added padding
+    img=Image.fromarray(img)
+    npimg = np.array(img)
+    toR = np.zeros(npimg.shape,dtype='uint8')
+    toR[npimg] = 255
+    return toR
 
 def mask_rescaler(h,w,in1):
     """Rescaling function - REQUIRED for uploading a mask to DMD.
@@ -174,7 +193,7 @@ def patterning(UVexposure,slimage,channel=4,intensity=1000):
     channel: UV/Blue LED
     intensity: LED intensity'''
     core.setSLMImage(DMD,slimage)
-    time.sleep(1.5)
+    time.sleep(1)
     core.setProperty('Mightex_BLS(USB)','channel',channel)
     core.setProperty('Mightex_BLS(USB)','normal_CurrentSet',intensity)
     time.sleep(UVexposure)
@@ -182,16 +201,15 @@ def patterning(UVexposure,slimage,channel=4,intensity=1000):
     time.sleep(1)
     core.setProperty('Mightex_BLS(USB)','normal_CurrentSet',0)
     
-def matrix_patterner(mat1,exposure,slimage,valveon = [],dist = 60,ch=4,inte=1000):
+def matrix_patterner(mat1,exposure,slimage,stage,valveon = [],dist = 60,ch=4,inte=1000):
     '''Patterns a grid of hydrogels at location specified in binary matrix mat1.
     mat1: locations of each hydrogel in grid.
     exposure: UV exposure for all hydrogels.
-    slimage: hydrogel shape.
+    slimage: hydrogel shape as a uint8 image.
     valveon: turning a particular valve to pattern.
     dist: distance between each hydrogel
     channel: UV/Blue LED
-    intensity: LED intensity
-    the matrix patterner uses the top left corner as a reference.'''
+    intensity: LED intensity'''
     x=core.getXPosition()
     y=core.getYPosition()
     for i in range(len(mat1)):
@@ -206,80 +224,43 @@ def matrix_patterner(mat1,exposure,slimage,valveon = [],dist = 60,ch=4,inte=1000
                 patterning(exposure,slimage,channel=ch,intensity=inte)
                 time.sleep(.5)
 
-
-
-#%%Imaging functions:
-    
-    
-#%%Functions that need more work:
-def grid_pattern_v2(dist,exposure,slimage,numgels=3, ch=4,inte = 1000):
-    '''Patterns a grid of hydrogels at all locations. specified in binary matrix mat1.
-    mat1: locations of each hydrogel in grid.
+def ploc_patterner(arr1,gridlen,exposure,radii=[],valveon = [],dist = 60,ch=4,inte=1000):
+    '''Patterns a set of cylindrical hydrogels at fractions (from 0 to 1) specified in 2xn array arr1.
+    if radii = 0, then radii is default 50 um. 
+    the total size of the 
+    arr1: locations of each hydrogel relative to grid size
     exposure: UV exposure for all hydrogels.
     slimage: hydrogel shape.
     valveon: turning a particular valve to pattern.
     dist: distance between each hydrogel
     channel: UV/Blue LED
-    intensity: LED intensity'''
+    intensity: LED intensity
+    the percent location patterner uses the top left corner as reference starting position.'''
+    h = 684
+    w = 608
+    CF = 0.45
+
     x=core.getXPosition()
     y=core.getYPosition()
-    hnum = numgels/2
-    xspace = np.linspace(x-(2*dist*hnum),x+(2*dist*hnum),2*numgels+1)
-    yspace = np.linspace(y-(dist*hnum),y+(dist*hnum),numgels+1)
-    xv,yv = np.meshgrid(xspace,yspace,indexing='ij')
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-    ax1.scatter(xv,yv,c='b')
-    ax1.scatter(x,y,c='r')
-    plt.show()    
-    for i in range(len(xspace)):
-        for j in range(len(yspace)):
-            if (xv[i,j],yv[i,j]) != (x,y):
-                core.setXYPosition(xv[i,j],yv[i,j])
-                time.sleep(0.5)
-                patterning(exposure,slimage,channel=ch,intensity=inte)
-                
-                
-def rect_pattern_v2(rx,exposure,numgels=6,dist=150,ch=4,inte=1000):
-    x=core.getXPosition()
-    y=core.getYPosition()
-    buf =(numgels-1)*10
-    yh = rx/6+20
-    hnum = int(numgels/2)
-    xspace = np.linspace(x-rx/2*hnum-buf,x+rx/2*hnum+buf,num=numgels)
-    x2=xspace[:hnum]-dist/2
-    x3 = xspace[hnum:]+dist/2
-    xt = np.concatenate((x2,x3))
-    
-    yspace = np.linspace(y-yh-buf,y+yh+buf,3)
-    xv,yv = np.meshgrid(xt,yspace,indexing='ij')
-    slimage = mask_rescaler(square_mask_generator(ex=[rx/6,rx]))
-    for i in range(len(xspace)):
-        for j in range(3):
-            core.setXYPosition(xv[i,j],yv[i,j])
-            patterning(exposure,slimage,channel=ch,intensity=inte)
-            time.sleep(2)  
-            
-def rect_pattern_v3(h,w,exposure,numgels=6,dist=75,ch=4,inte=1000):
-    x=core.getXPosition()
-    y=core.getYPosition()
-    rx = 75/0.45*3
-    xs2 = np.linspace(0,300*numgels,numgels)+dist
-    # xs2 = np.arange(0,rx*numgels,rx/2)
-    x2r = x+xs2
-    x2l = x-xs2
-    xtot = np.concatenate((x2l,x2r))
-    slimage = mask_rescaler(h,w,square_mask_generator(h,w,ex=[rx/6,rx]))
-    for j in [-1,1]:
-        # core.setXYPosition(x,y)
-        core.sleep(1)
-        core.setXYPosition(x,y)
-        time.sleep(3)
-        core.setRelativeXYPosition((dist+330)/2*j,0)   
-        patterning(exposure,slimage,channel=ch,intensity=inte)
-        time.sleep(2)
-        for i in range(1,numgels):
-            # core.setXYPosition(xtot[i],y)
-            core.setRelativeXYPosition(330*j,0)   
-            patterning(exposure,slimage,channel=ch,intensity=inte)
-            time.sleep(2)
+    arr2 = arr1-0.5
+    arrdist = arr2*gridlen        
+    # core.setXYPosition(x,y)
+    time.sleep(3)
+
+    for i in range(np.size(arr1,0)):
+        if radii == []:
+            rad = 25
+        elif type(radii) == int or type(radii) == float:
+            rad = radii            
+        else:
+            rad = radii[i]
+
+        rad_conv = rad/CF
+        draw_circle = circle_mask_generator(h,w,radius=(rad_conv))
+        circle_scaled = mask_rescaler(h,w,draw_circle)
+        xpos = x+arrdist[i,0]
+        ypos = y+arrdist[i,1]
+        # time.sleep(0.5)
+        core.setXYPosition(xpos,ypos)   
+        patterning(exposure,circle_scaled,channel=ch,intensity=inte)
+        # time.sleep(.5)           
