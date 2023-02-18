@@ -15,8 +15,5 @@ There are three key files in the main folder:
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Install [Micromanager](https://micro-manager.org/)
+Install [Pycromanager](https://github.com/micro-manager/pycro-manager)
