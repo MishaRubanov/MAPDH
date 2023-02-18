@@ -9,9 +9,9 @@ There are three key files in the main folder:
 * Patterning_functions
   * This file contains all necessary functions to run all operations in MAPDH.
 * Patterning_example_script
-** This file is an example that uses a few built-in masks to pattern differently shaped hydrogels
+  * This file is an example that uses a few built-in masks to pattern differently shaped hydrogels
 * MAPDH_example_script
-** This file is an example for fully automated MADPH - incorporating the flow controller and patterning setup into one script.
+  * This file is an example for fully automated MADPH - incorporating the flow controller and patterning setup into one script.
 
 ### Prerequisites
 
