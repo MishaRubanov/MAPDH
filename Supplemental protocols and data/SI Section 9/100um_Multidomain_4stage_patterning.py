@@ -113,7 +113,6 @@ def position_list():
     return np_list
 
 def patterning(UVexposure,slimage,channel=4,intensity=1000):
-    
     core.setSLMImage(DMD,slimage)
     time.sleep(1.5)
     core.setProperty('Mightex_BLS(USB)','channel',channel)
@@ -137,30 +136,32 @@ def patterning(UVexposure,slimage,channel=4,intensity=1000):
 
 # Circle and Objective Parameters
 diam = 20
-CF = 0.28
+CF = 0.45
 diam_conv = diam / CF
 draw_circle = circle_mask_generator(radius=(diam_conv / 2))
-
 # Square and Objective Parameters
-square_side = 20
-CF = 0.28
+square_side = 50
+CF = 0.45
 square_conv = square_side / CF
 draw_rectangle = rectangle_mask_generator(side=square_conv)
 
 #%% Inputs
-uv_exposure = 0.4
-light_pillar = 0.4 # for patterning off/Empty
+output = draw_rectangle # output can equal draw_circle or draw_rectangle
+uv_exposure = 0.5
+light_pillar = 0.3 # for patterning off/Empty
 brightness = 100 #XCite lamp intensity in %
 core.setProperty('HamamatsuHam_DCAM','Binning','2x2')
 
-filename = '4_stage_patterning_20umChannel_10and20umGels'
+filename = '4_stage_patterning_100umChannel_50umGels'
 posi = ("skip", 'stage1gels_', 'stage2gels_','stage3gels_','stage4gels_')
-exposure = (0, 10) #exposure in ms
-fluorophore = ("skip", 'BF') #Fluorophore to use
+exposure = (0, 400, 400, 400, 10) #exposure in ms
+fluorophore = ("skip", 'Cy3','GFP-FAM','Cy5', 'BF') #Fluorophore to use
 valves = ('s0', 's1', 's2', 's3', 's4', 's5')
 
 #%% Setup
 xy_up = position_list()
+SLim = mask_rescaler(output)
+core.setSLMImage(DMD,SLim)
 core.setProperty('Mightex_BLS(USB)','channel',1)
 core.setProperty('Mightex_BLS(USB)','normal_CurrentSet', 0)
 
@@ -178,24 +179,73 @@ for stage in range(1,5):
     core.setProperty('UserDefinedStateDevice','Label','BF')
     core.setProperty('UserDefinedShutter-1','State',1)
     core.setProperty('UserDefinedShutter','State',1)
-    for i in range(0,2):
+    for i in range(0,4):
         core.setXYPosition(xy_up[i,0],xy_up[i,1])
         time.sleep(1)
         if i == 0:
-            core.setRelativeXYPosition((stage-1)*50.0, 0)
+            core.setRelativeXYPosition((stage-1)*150.0, 0)
             for dy in range(0,5):
                 valve_timer(valves[stage], 5) #flows pregel 5 seconds
-                core.setRelativeXYPosition(0, 50.0)
-                SLim = mask_rescaler(rectangle_mask_generator(side=(20 / 0.28)))
+                core.setRelativeXYPosition(0, 100.0)
                 patterning(uv_exposure,SLim,channel=4,intensity=1000)
         if i == 1:
-            core.setRelativeXYPosition((stage-1)*100.0, 0)
-            for dy in range(0,5):
-                valve_timer(valves[stage], 5) #flows pregel 5 seconds
-                core.setRelativeXYPosition(0, 50.0)
-                SLim = mask_rescaler(rectangle_mask_generator(side=(10 / 0.28)))
+            if stage == 1:
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds 
                 patterning(uv_exposure,SLim,channel=4,intensity=1000)
-
+            if stage == 2:
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(100.0,0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            if stage == 3:
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(0,100.0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            if stage == 4:
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(100.0,100.0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+        if i == 2:
+            valve_timer(valves[stage], 5) #flows pregel 5 seconds
+            core.setRelativeXYPosition(0, -1*(75+(4-stage)*100.0))
+            patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            
+            valve_timer(valves[stage], 5) #flows pregel 5 seconds
+            core.setRelativeXYPosition(1*(75+(4-stage)*100.0), 1*(75+(4-stage)*100.0))
+            patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            
+            valve_timer(valves[stage], 5) #flows pregel 5 seconds
+            core.setRelativeXYPosition(-1*(75+(4-stage)*100.0), 1*(75+(4-stage)*100.0))
+            patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            
+            valve_timer(valves[stage], 5) #flows pregel 5 seconds
+            core.setRelativeXYPosition(-1*(75+(4-stage)*100.0), -1*(75 +(4-stage)*100.0))
+            patterning(uv_exposure,SLim,channel=4,intensity=1000)
+        if i == 3:
+            core.setRelativeXYPosition(-1*((4-stage)*100.0), -1*((4-stage)*100.0))
+            for d in range(0, 5-stage):
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(200.0, 0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            for d in range(0, 5-stage):
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(0, 200.0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            for d in range(0, 5-stage):
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(-200.0, 0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+            for d in range(0, 5-stage):
+                valve_timer(valves[stage], 5) #flows pregel 5 seconds
+                core.setRelativeXYPosition(0, -200.0)
+                patterning(uv_exposure,SLim,channel=4,intensity=1000)
+                
+    # for i in range((stage-1)*5, stage*5):
+    #     valve_on(valves[stage]) #flow pregel
+    #     for m in range(0, 5):
+    #         time.sleep(1) 
+    #     valve_off() 
+    #     core.setXYPosition(xy_up[i,0],xy_up[i,1])
+    #     patterning(uv_exposure,SLim,channel=4,intensity=1000)
     
     print('Patterning ended, starting 60 second wash')
     valve_timer(valves[5], 60) #flows buffer 60 seconds
@@ -221,7 +271,7 @@ for stage in range(1,5):
         tagged_image = core.getTaggedImage()
         pixels = np.reshape(tagged_image.pix,newshape=[tagged_image.tags['Height'], tagged_image.tags['Width']])
        
-        cv2.imwrite(filename + str(posi[stage]) + '_' + str(fluorophore[i])+'.tif', pixels.astype(np.uint16) )
+        cv2.imwrite(filename + str(posi[stage]) + '_' + str(fluorophore[i])+'_.tif', pixels.astype(np.uint16) )
         core.setProperty('DTOL-DAC-0', 'Volts', 0)
         time.sleep(2)
      

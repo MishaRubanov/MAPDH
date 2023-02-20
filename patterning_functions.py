@@ -226,8 +226,7 @@ def matrix_patterner(mat1,exposure,slimage,stage,valveon = [],dist = 60,ch=4,int
 
 def ploc_patterner(arr1,gridlen,exposure,radii=[],valveon = [],dist = 60,ch=4,inte=1000):
     '''Patterns a set of cylindrical hydrogels at fractions (from 0 to 1) specified in 2xn array arr1.
-    if radii = 0, then radii is default 50 um. 
-    the total size of the 
+    if radii is unspecified, then radii defaults to 25 um
     arr1: locations of each hydrogel relative to grid size
     exposure: UV exposure for all hydrogels.
     slimage: hydrogel shape.
