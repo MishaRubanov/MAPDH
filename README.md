@@ -3,8 +3,8 @@
 
 Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH**) is a platform for the automated fabrication of DNA-functionalized hydrogels using digital, maskless photolithography. 
 
-The preprint can be found at https://doi.org/10.26434/chemrxiv-2023-qmfjq
-The MAPDH protocol can be found at https://dx.doi.org/10.17504/protocols.io.j8nlkw2ywl5r/v1
+* The preprint can be found at https://doi.org/10.26434/chemrxiv-2023-qmfjq
+* The MAPDH protocol can be found at https://dx.doi.org/10.17504/protocols.io.j8nlkw2ywl5r/v1
 
 ## Getting Started
 
