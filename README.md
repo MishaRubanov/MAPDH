@@ -9,13 +9,14 @@ Multidomain, Automated, Photopatterning of DNA-Functionalized Hydrogels (**MAPDH
 
 To streamline MAPDH use, example scripts and functions are provided.
 
-Key files in the main folder:
+Key files:
 * Patterning_functions
   * This file contains all necessary functions, with documentation, to run all operations in MAPDH.
 * Patterning_example_script
   * This file is an example that uses built-in masks to pattern differently shaped hydrogels.
 * MAPDH_example_script
   * This file is an example for fully automated MADPH - incorporating the flow controller, patterning setup, bright-field and fluorescence imaging into one script for multi-domain patterning and simultaneous imaging.
+* 
 
 ### Prerequisites
 
