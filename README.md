@@ -32,7 +32,7 @@ Key files in the main folder:
   * Pycromanager: 0.6.0
 
 ### Patterning examples
-These are real-time videos for fabrication of hydrogel letters taken using bright-field microscopy. Each letter is fabricated using the message_mask_generator package in Python. Each letter here is the same domain, i.e., each hydrogel has the same composition.
+These are real-time videos for fabrication of hydrogel letters taken using bright-field microscopy, with a field of view of 1250 microns. Each letter is fabricated using the message_mask_generator package in Python. Each letter here is the same domain, i.e., each hydrogel has the same composition.
 
 https://user-images.githubusercontent.com/67386551/219878485-338b717b-f008-45a6-b417-a819aa724788.mp4
 
